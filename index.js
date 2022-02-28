@@ -10,5 +10,21 @@ const db = mysql.createConnection(
       password: '',
       database: 'employees_db'
     },
-    console.log(`Connected to the employees_db database.`)
+    console.log(`Successfully connected to the employees database!`)
   );
+
+const options = [
+    {
+    type: 'list',
+    message: 'What would you like to do?',
+    name: 'choice',
+    choices: ["View All Departments",
+    "View All Roles",
+    "View All Employees",
+    "Add a Department",
+    "Add a Role",
+    "Add an Employee",
+    "Update an Employee Role",
+    "Nothing"]
+  },
+]
