@@ -40,9 +40,9 @@ function init() {
                 })
         } else if (data.choice === "Add an Employee") {
             db.query(`SELECT * FROM role`, function (err, result) {
-                const roleChoices = result.map(({ title, id }) => ({
+                const roleChoices = result.map(({ title, department_id }) => ({
                     name: title,
-                    value: id
+                    value: department_id
                 }));
             db.query('SELECT * FROM employees', function (err, result){
                 const managerChoices = result.map(({ first_name, last_name, manager_id}) => ({
@@ -77,10 +77,57 @@ function init() {
                     if (err) {
                         console.log(err);
                     }
+                });
                     console.log(`employee with ${result.first_name} ${result.last_name} has been successfully added to the employee database!`)
+                });
+            });
+        });
+
+        } else if (data.choice === "Update an Employee Role") {
+            db.query (`SELECT * FROM roles`, function (err, result){
+                const roleChoices = result.map(({ title, department_id }) => ({
+                    name: title,
+                    value: department_id
+                }));
+            db.query (`SELECT * FROM employees`, function (err, result){
+                const empChoices = result.map(({ first_name, last_name, role_id}) => ({
+                    name: `${first_name} ${last_name}`,
+                    value: role_id
+                }));
+            inquirer.prompt([
+                {
+                    type:'list',
+                    message:'Which employee would you like to update?',
+                    name: 'role_id',
+                    choices: empChoices
+                },
+                {
+                    type:'list',
+                    message:'Which role do you want to assign the selected employee?',
+                    name: 'department_id',
+                    choices: roleChoices
+                },
+            ]).then (function (data){
+                db.query('UPDATE employee SET department_id=? WHERE id=? ', [data.role_id,data.id], (err,result) => {
+                    if (err) {
+                        console.log(err);
+                        optionSelect();
+                    } 
                 })
+                    console.log(`Employee has been updated!`);
+                    optionSelect();
+                })
+            })})    
             })
-        })})}
+            })
+        }
+        {
+
+        }
+    
+    
+    
+    })}
     })
 }
 
