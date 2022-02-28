@@ -108,25 +108,37 @@ function init() {
                     choices: roleChoices
                 },
             ]).then (function (data){
-                db.query('UPDATE employee SET department_id=? WHERE id=? ', [data.role_id,data.id], (err,result) => {
+                db.query('UPDATE employee SET department_id=? WHERE id=? ', [data.department_id,data.role_id], (err,result) => {
                     if (err) {
                         console.log(err);
-                        optionSelect();
                     } 
                 })
                     console.log(`Employee has been updated!`);
-                    optionSelect();
+                    init();
                 })
-            })})    
             })
-            })
-        }
-        {
-
-        }
-    
-    
-    
+        })  
+        
+        } else if (data.choice === "View All Roles") {
+            db.query('SELECT * FROM roles', function (err, results) {
+                if (err) {
+                console.log(err);
+                  }
+                console.table(results);
+            });
+        } else if (data.choice === "Add a Role") {
+            db.query('SELECT * FROM departments', function (err, results) {
+                const deptNew = results.map(({ name, id }) => ({
+                    name: name,
+                    value: id
+                }));
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    message: 'What is the name of the Role?',
+                    name: 'title'
+                }
+            ])
     })}
     })
 }
