@@ -137,10 +137,34 @@ function init() {
                     type: 'input',
                     message: 'What is the name of the Role?',
                     name: 'title'
-                }
-            ])
-    })}
-    })
-}
+                },
+                {
+                    type: 'input',
+                    message: 'What is the salary for this role?',
+                    name: 'salary'
+                },
+                {
+                    type: 'list',
+                    message: 'Which department does this role belong to?',
+                    name: 'dept_id'
+                },
+            ]).then (function (data) {
+                db.query(`INSERT INTO role SET ?`,[data], (err, result) => {
+                    if (err) {
+                      console.log(err);
+                      init();
+                     } 
+                     console.log(`${data.title} added to Roles`);
+                     init();
+                    })});
+            });
+        } else if (data.choice === "View All Departments") {
+            db.query('SELECT * FROM departments', function (err, results) {
+                if (err) {
+                    console.log(err);
+                      }
+                    console.table(results);
+                });
+              
 
 init();
