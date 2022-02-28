@@ -165,6 +165,23 @@ function init() {
                       }
                     console.table(results);
                 });
+        } else if (data.choice === "Add a Department") {
+            inquirer.prompt([
+                {
+                    type: 'input',
+                    message: 'What is the name of the Department?',
+                    name: 'title'
+                },
+            ]).then (function (data) {
+                db.query('INSERT INTO departments SET ?', (data), function (err, result) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log (`${data.name} has been added to Departments successfully!`);
+                    init();
+                })});   
+         } else if (data.choice === "Quit") {
+             console.log ("Have a great day!")
               
 
 init();
