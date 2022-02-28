@@ -18,13 +18,12 @@ const options = [
     type: 'list',
     message: 'What would you like to do?',
     name: 'choice',
-    choices: ["View All Departments",
-    "View All Roles",
-    "View All Employees",
-    "Add a Department",
-    "Add a Role",
+    choices: ["View All Employees",
     "Add an Employee",
     "Update an Employee Role",
-    "Nothing"]
+    "View All Roles",
+    "Add a Role",
+    "View All Departments",
+    "Add a Department",]
   },
 ]
