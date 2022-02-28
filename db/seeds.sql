@@ -9,7 +9,7 @@ VALUES ("Sales Lead", 4, 100000),
        ("Account Manager", 2, 160000), 
        ("Accountant", 2, 125000),
        ("Legal Team Lead", 3, 250000), 
-       ("Lawyer", 3, 190000);
+       ("Lawyer", 4, 190000);
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ("John", "Doe", 1, 2),

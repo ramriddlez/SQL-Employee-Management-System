@@ -4,29 +4,30 @@ const consoletable = require("console.table");
 
 const db = mysql.createConnection(
     {
-      host: 'localhost',
-      user: 'root',
-      // TO DO: Enter your MySQL password below
-      password: '',
-      database: 'employees_db'
+        host: 'localhost',
+        user: 'root',
+        // TO DO: Enter your MySQL password below
+        password: 'waheguru1995_',
+        database: 'employees_db'
     },
     console.log(`Successfully connected to the employees database!`)
 );
 
 
-function init () {
+function init() {
     inquirer.prompt([
         {
             type: 'list',
             message: 'What would you like to do?',
             name: 'choice',
             choices: ["View All Employees",
-            "Add an Employee",
-            "Update an Employee Role",
-            "View All Roles",
-            "Add a Role",
-            "View All Departments",
-            "Add a Department"]
+                "Add an Employee",
+                "Update an Employee Role",
+                "View All Roles",
+                "Add a Role",
+                "View All Departments",
+                "Add a Department",
+                "Quit"]
         }
     ]).then(function (data) {
         if (data.choice === "View All Employees") {
@@ -35,12 +36,46 @@ function init () {
                     // if (err) {
                     //     console.log(err);
                     //   }
-                      console.table(results);
-                   
-
+                    console.table(results);
                 })
-        }});
-
-}
-
-init();
+        } else if (data.choice === "Add an Employee") {
+            db.query(`SELECT * FROM role`, function (err, result) {
+                const roleChoices = result.map(({ title, id }) => ({
+                    name: title,
+                    value: id
+                }));
+            db.query('SELECT * FROM employees', function (err, result){
+                const managerChoices = result.map(({ first_name, last_name, manager_id}) => ({
+                    name: `${first_name} ${last_name}`,
+                    value: manager_id
+                }));
+            inquirer.prompt[(
+                {
+                    type: 'input',
+                    message: 'What is the employees first name?',
+                    name: 'first_name'
+                },
+                {
+                    type: 'input',
+                    message: 'What is the Employees last name?',
+                    name: 'last_name'
+                },
+                {
+                    type: 'list',
+                    message: 'what is the role of the employee?',
+                    name: 'role_id',
+                    choices: roleChoices
+                },
+                {
+                    type: 'list',
+                    message: 'who is the manager of this employee?',
+                    name: 'manager_id',
+                    choices: managerChoices
+                }
+            )].then (function (data) {
+                db.query ('INSERT INTO employee SET ?', (data), (err, result) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log(`employee with ${result.first_name} ${result.last_name} has been successfully added to the employee database!`)
+                })
