@@ -79,3 +79,9 @@ function init() {
                     }
                     console.log(`employee with ${result.first_name} ${result.last_name} has been successfully added to the employee database!`)
                 })
+            })
+        })})}
+    })
+}
+
+init();
