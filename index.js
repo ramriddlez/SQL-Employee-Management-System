@@ -11,7 +11,7 @@ const db = mysql.createConnection(
       database: 'employees_db'
     },
     console.log(`Successfully connected to the employees database!`)
-  );
+);
 
 
 function init () {
