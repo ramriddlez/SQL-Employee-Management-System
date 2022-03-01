@@ -185,5 +185,5 @@ function init() {
         } else if (data.choice === "Quit") {
             console.log("Have a great day!")
 
-
+        }})}
             init();
