@@ -32,24 +32,25 @@ function init() {
     ]).then(function (data) {
         if (data.choice === "View All Employees") {
             db.query(
-                "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;", function (err, results) {
-                    // if (err) {
-                    //     console.log(err);
-                    //   }
+                "SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS departments, roles.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employees LEFT JOIN roles on employees.role_id = roles.id LEFT JOIN departments on roles.department_id = departments.id LEFT JOIN employees manager on manager.id = employees.manager_id;", function (err, results) {
+                    if (err) {
+                        console.log(err);
+                      }
                     console.table(results);
+                    init();
                 })
         } else if (data.choice === "Add an Employee") {
-            db.query(`SELECT * FROM role`, function (err, result) {
-                const roleChoices = result.map(({ title, department_id }) => ({
+            db.query(`SELECT * FROM roles`, function (err, result) {
+                const roleChoices = result.map(({ title, id }) => ({
                     name: title,
-                    value: department_id
+                    value: id
                 }));
                 db.query('SELECT * FROM employees', function (err, result) {
-                    const managerChoices = result.map(({ first_name, last_name, manager_id }) => ({
+                    const managerChoices = result.map(({ first_name, last_name, id }) => ({
                         name: `${first_name} ${last_name}`,
-                        value: manager_id
+                        value: id
                     }));
-                    inquirer.prompt[(
+                    inquirer.prompt([
                         {
                             type: 'input',
                             message: 'What is the employees first name?',
@@ -72,43 +73,44 @@ function init() {
                             name: 'manager_id',
                             choices: managerChoices
                         }
-                    )].then(function (data) {
-                        db.query('INSERT INTO employee SET ?', (data), (err, result) => {
+                    ]).then(function (data) {
+                        db.query('INSERT INTO employees SET ?', (data), (err) => {
                             if (err) {
                                 console.log(err);
                             }
                         });
-                        console.log(`employee with ${result.first_name} ${result.last_name} has been successfully added to the employee database!`)
+                        console.log(`employee ${data.first_name} ${data.last_name} has been successfully added to the employee database!`)
+                        init();
                     });
                 });
             });
 
         } else if (data.choice === "Update an Employee Role") {
             db.query(`SELECT * FROM roles`, function (err, result) {
-                const roleChoices = result.map(({ title, department_id }) => ({
+                const roleChoices = result.map(({ title, id }) => ({
                     name: title,
-                    value: department_id
+                    value: id
                 }));
                 db.query(`SELECT * FROM employees`, function (err, result) {
-                    const empChoices = result.map(({ first_name, last_name, role_id }) => ({
+                    const empChoices = result.map(({ first_name, last_name, id }) => ({
                         name: `${first_name} ${last_name}`,
-                        value: role_id
+                        value: id
                     }));
                     inquirer.prompt([
                         {
                             type: 'list',
                             message: 'Which employee would you like to update?',
-                            name: 'role_id',
+                            name: 'id',
                             choices: empChoices
                         },
                         {
                             type: 'list',
                             message: 'Which role do you want to assign the selected employee?',
-                            name: 'department_id',
+                            name: 'role_id',
                             choices: roleChoices
                         },
                     ]).then(function (data) {
-                        db.query('UPDATE employee SET department_id=? WHERE id=? ', [data.department_id, data.role_id], (err, result) => {
+                        db.query('UPDATE employees SET role_id=? WHERE id=? ', [data.role_id, data.id], (err) => {
                             if (err) {
                                 console.log(err);
                             }
@@ -125,6 +127,7 @@ function init() {
                     console.log(err);
                 }
                 console.table(results);
+                init();
             });
         } else if (data.choice === "Add a Role") {
             db.query('SELECT * FROM departments', function (err, results) {
@@ -146,13 +149,13 @@ function init() {
                     {
                         type: 'list',
                         message: 'Which department does this role belong to?',
-                        name: 'dept_id'
+                        name: 'department_id',
+                        choices: deptNew
                     },
                 ]).then(function (data) {
-                    db.query(`INSERT INTO role SET ?`, [data], (err, result) => {
+                    db.query(`INSERT INTO roles SET ?`, [data], (err) => {
                         if (err) {
                             console.log(err);
-                            init();
                         }
                         console.log(`${data.title} added to Roles`);
                         init();
@@ -163,22 +166,25 @@ function init() {
             db.query('SELECT * FROM departments', function (err, results) {
                 if (err) {
                     console.log(err);
+                    init();
                 }
                 console.table(results);
+                init();
             });
         } else if (data.choice === "Add a Department") {
             inquirer.prompt([
                 {
                     type: 'input',
                     message: 'What is the name of the Department?',
-                    name: 'title'
+                    name: 'name'
                 },
             ]).then(function (data) {
-                db.query('INSERT INTO departments SET ?', (data), function (err, result) {
+                db.query('INSERT INTO departments SET ?', (data), function (err) {
                     if (err) {
                         console.log(err);
+                        init();
                     }
-                    console.log(result `has been added to Departments successfully!`);
+                    console.log(`This department has been added to Departments successfully!`);
                     init();
                 })
             });
