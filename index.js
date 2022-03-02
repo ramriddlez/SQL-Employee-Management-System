@@ -144,7 +144,15 @@ function init() {
                     {
                         type: 'input',
                         message: 'What is the salary for this role?',
-                        name: 'salary'
+                        name: 'salary',
+                        validate: function isNumeric(name) {
+                            if(isNaN(name)){
+                                return ' enter numbers only'
+                              }else {
+                                return true
+                              }
+                        }
+                        //add validate function to validate if number between 1-10
                     },
                     {
                         type: 'list',
