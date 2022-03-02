@@ -27,6 +27,7 @@ function init() {
                 "Add a Role",
                 "View All Departments",
                 "Add a Department",
+                "Update an Employees Manager",
                 "Quit"]
         }
     ]).then(function (data) {
@@ -120,6 +121,39 @@ function init() {
                     })
                 })
             })
+        } else if (data.choice === "Update an Employees Manager") {
+                db.query(`SELECT * FROM employees`, function (err, result) {
+                    const MngerChoices = result.map(({ first_name, last_name, manager_id }) => ({
+                        name: `${first_name} ${last_name}`,
+                        value: manager_id
+                    }));
+                    inquirer.prompt([
+                        {
+                            type: 'list',
+                            message: 'Which Manager would you like to update?',
+                            name: 'manager_id',
+                            choices: MngerChoices
+                        },
+                        {
+                            type: 'input',
+                            message: 'What is the Managers new First name?',
+                            name: 'first_name',
+                        },
+                        {
+                            type: 'input',
+                            message: 'What is the Managers new Last name?',
+                            name: 'last_name',
+                        },
+                    ]).then(function (data) {
+                        db.query('UPDATE employees SET first_name=? WHERE last_name=? ', [data.first_name, data.last_name], (err) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                        })
+                        console.log(`Manager has been updated!`);
+                        init();
+                    })
+                })
 
         } else if (data.choice === "View All Roles") {
             db.query('SELECT * FROM roles', function (err, results) {
