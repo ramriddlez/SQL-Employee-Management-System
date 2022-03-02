@@ -27,7 +27,9 @@ function init() {
                 "Add a Role",
                 "View All Departments",
                 "Add a Department",
-                "Update an Employees Manager",
+                "Delete an Employee",
+                "Delete a Department",
+                "Delete a Role",
                 "Quit"]
         }
     ]).then(function (data) {
@@ -36,7 +38,7 @@ function init() {
                 "SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS departments, roles.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employees LEFT JOIN roles on employees.role_id = roles.id LEFT JOIN departments on roles.department_id = departments.id LEFT JOIN employees manager on manager.id = employees.manager_id;", function (err, results) {
                     if (err) {
                         console.log(err);
-                      }
+                    }
                     console.table(results);
                     init();
                 })
@@ -121,39 +123,75 @@ function init() {
                     })
                 })
             })
-        } else if (data.choice === "Update an Employees Manager") {
-                db.query(`SELECT * FROM employees`, function (err, result) {
-                    const MngerChoices = result.map(({ first_name, last_name, manager_id }) => ({
-                        name: `${first_name} ${last_name}`,
-                        value: manager_id
-                    }));
-                    inquirer.prompt([
-                        {
-                            type: 'list',
-                            message: 'Which Manager would you like to update?',
-                            name: 'manager_id',
-                            choices: MngerChoices
-                        },
-                        {
-                            type: 'input',
-                            message: 'What is the Managers new First name?',
-                            name: 'first_name',
-                        },
-                        {
-                            type: 'input',
-                            message: 'What is the Managers new Last name?',
-                            name: 'last_name',
-                        },
-                    ]).then(function (data) {
-                        db.query('UPDATE employees SET first_name=? WHERE last_name=? ', [data.first_name, data.last_name], (err) => {
-                            if (err) {
-                                console.log(err);
-                            }
-                        })
-                        console.log(`Manager has been updated!`);
-                        init();
+        } else if (data.choice === "Delete an Employee") {
+            db.query(`SELECT * FROM employees`, function (err, result) {
+                const empChoices = result.map(({ first_name, last_name, id }) => ({
+                    name: `${first_name} ${last_name}`,
+                    value: id
+                }));
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        message: 'Which Employee would you like to delete?',
+                        name: 'id',
+                        choices: empChoices
+                    },
+                ]).then(function (data) {
+                    db.query('DELETE FROM employees WHERE id = ? ', [data.id], (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
                     })
+                    console.log(`Employee has been fired!`);
+                    init();
                 })
+            });
+        } else if (data.choice === "Delete a Role") {
+            db.query(`SELECT * FROM roles`, function (err, result) {
+                const roleChoices = result.map(({ title, id }) => ({
+                    name: title,
+                    value: id
+                }));
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        message: 'Which Role would you like to delete?',
+                        name: 'id',
+                        choices: roleChoices
+                    },
+                ]).then(function (data) {
+                    db.query('DELETE FROM roles WHERE id = ? ', [data.id], (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    })
+                    console.log(`Role has been deleted!`);
+                    init();
+                })
+            })
+        } else if (data.choice === "Delete a Department") {
+            db.query(`SELECT * FROM departments`, function (err, result) {
+                const deptChoices = result.map(({ name, id }) => ({
+                    name: name,
+                    value: id
+                }));
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        message: 'Which Department would you like to delete?',
+                        name: 'id',
+                        choices: deptChoices
+                    },
+                ]).then(function (data) {
+                    db.query('DELETE FROM departments WHERE id = ? ', [data.id], (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    })
+                    console.log(`Department has been vanished!`);
+                    init();
+                })
+            })
 
         } else if (data.choice === "View All Roles") {
             db.query('SELECT * FROM roles', function (err, results) {
@@ -180,11 +218,11 @@ function init() {
                         message: 'What is the salary for this role?',
                         name: 'salary',
                         validate: function isNumeric(name) {
-                            if(isNaN(name)){
+                            if (isNaN(name)) {
                                 return ' enter numbers only'
-                              }else {
+                            } else {
                                 return true
-                              }
+                            }
                         }
                         //add validate function to validate if number between 1-10
                     },
@@ -233,5 +271,7 @@ function init() {
         } else if (data.choice === "Quit") {
             console.log("Have a great day!")
 
-        }})}
-            init();
+        }
+    })
+}
+init();
