@@ -18,7 +18,7 @@ Developers frequently have to create interfaces that allow non-developers to eas
 ## Installation
 NPM install on CLI
 
-MAKE SURE TO INPUT YOUR PERSONAL PASSWORD TO YOUR ROOT SQL ON YOUR TERMINAL in index.js
+<strong>MAKE SURE TO INPUT YOUR PERSONAL PASSWORD TO YOUR ROOT SQL ON YOUR TERMINAL in index.js</strong>
 
 ## Usage
 AS A business owner
