@@ -18,6 +18,8 @@ Developers frequently have to create interfaces that allow non-developers to eas
 ## Installation
 NPM install on CLI
 
+MAKE SURE TO INPUT YOUR PERSONAL PASSWORD TO YOUR ROOT SQL ON YOUR TERMINAL in index.js
+
 ## Usage
 AS A business owner
 I WANT to be able to view and manage the departments, roles, and employees in my company
