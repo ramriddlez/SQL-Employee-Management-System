@@ -14,6 +14,10 @@
 ## Description
 Developers frequently have to create interfaces that allow non-developers to easily view and interact with information stored in databases. These interfaces are called content management systems (CMS). The purpose of this project was to build a command-line application from scratch to manage a company's employee database using Node.js, Inquirer, and MySQL.
 <br>
+![image](https://user-images.githubusercontent.com/96890575/156697217-9c58a4bf-d821-4951-b119-1b523098b91a.png)
+![image](https://user-images.githubusercontent.com/96890575/156697244-b00b8873-8fff-4aff-851b-3d2361a03293.png)
+![image](https://user-images.githubusercontent.com/96890575/156697269-e0c40840-5e73-441e-9522-83008d720cca.png)
+
 
 ## Installation
 NPM install on CLI
